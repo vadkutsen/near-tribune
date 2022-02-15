@@ -1,4 +1,4 @@
-# near-tribune
+# Near Tribune
 
 ## Project setup
 ```

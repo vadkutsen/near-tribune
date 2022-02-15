@@ -1,0 +1,73 @@
+<template>
+  <div>
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="panel panel-default panel-pet">
+        <div class="panel-body">
+          <div class="font-bold text-3xl">{{ post.title }}</div>
+          <span class="text-sm mb-2"><i>{{ new Date(post.created_at/1000000).toLocaleDateString() }} by @{{ post.author }}</i></span><br />
+          <span>{{ post.text }}</span><br />
+        </div>
+        <div class="panel-footer">
+          <div v-if="accountId != post.author">
+            <DonateForm/>
+          </div>
+          <button v-if="accountId === post.author"
+            class="flex items-center justify-center h-12 w-40 rounded-md bg-gray-500 text-white mx-2"
+            type="submit"
+            @click="toggleEdit"
+          >
+            <span class="mr-2">Edit</span>
+          </button>
+          <div v-if="showEdit">
+            <EditPostDialog :post="post"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <Loading v-model:active="isLoading" :is-full-page="true" />
+</template>
+
+<script>
+import DonateForm from "@/components/DonateForm.vue"
+import EditPostDialog from "@/components/EditPostDialog.vue"
+import Loading from "vue-loading-overlay"
+import "vue-loading-overlay/dist/vue-loading.css"
+import { usePosts } from "@/composables/posts"
+import { onMounted } from '@vue/runtime-core'
+import { ref } from 'vue'
+import { getPost } from '@/services/near'
+import { useRoute } from "vue-router";
+
+export default {
+  components: {
+    DonateForm,
+    Loading,
+    EditPostDialog
+  },
+  setup(props) {
+      const post = ref([])
+      const err = ref(null)
+      const route = useRoute()
+      const isLoading = ref(false)
+
+      onMounted(async () => {
+        const postId = route.params.id
+        isLoading.value = true
+        try {
+        post.value = await getPost(postId)
+        isLoading.value = false
+        } catch (e) {
+        err.value = e
+        isLoading.value = false
+        alert(err.value)
+        }
+    })
+    return {
+      post,
+      isLoading,
+      ...usePosts(props)
+    }
+  },
+}
+</script>
