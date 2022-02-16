@@ -1,13 +1,16 @@
 <template>
-  <router-view/>
+  <MainLayout>
+    <router-view/>
+  </MainLayout>
 </template>
 
 <script>
-import Home from '@/views/Home.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 export default {
   name: 'App',
   components: {
+    MainLayout
   }
 }
 </script>
@@ -22,7 +25,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-a.router-link-active {
+/* a.router-link-active {
   border-bottom: 0.1em solid indigo;
-}
+} */
 </style>

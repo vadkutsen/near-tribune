@@ -67,17 +67,13 @@
         </div>
       </div>
     </div>
-    <Loading v-model:active="isLoading" :is-full-page="false" />
 </template>
 
 <script>
 import { usePosts } from "@/composables/posts"
-import Loading from "vue-loading-overlay"
-import "vue-loading-overlay/dist/vue-loading.css"
 
 export default {
   components: {
-    Loading
   },
   setup() {
     return {

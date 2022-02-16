@@ -72,7 +72,6 @@ impl NearTribune {
   pub fn tip_author(&mut self, author_id: AccountId) -> bool {
       let deposit = env::attached_deposit();
       let donator_account_id: String = env::predecessor_account_id();
-    //   let current_account_id: String = env::current_account_id();
       assert!(deposit > 0, "The amount of tips should be greater than 0");
       // assert_ne!(author_id, donator_account_id, "You cannot tip yourself");
       let total = self.tips.get(&author_id).unwrap_or(0) + deposit;

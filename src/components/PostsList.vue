@@ -14,18 +14,13 @@
     <div v-else class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-8 lg:items-center">
       <h2>No posts added yet</h2>
     </div>
-    <Loading v-model:active="isLoading" :is-full-page="false" />
 </template>
 
 <script>
-// import PostCard from "@/components/PostCard.vue"
-import Loading from "vue-loading-overlay"
-import "vue-loading-overlay/dist/vue-loading.css"
 import { usePosts } from "@/composables/posts"
+
 export default {
   components: {
-    Loading,
-    // PostCard
   },
   props: {
     posts: {

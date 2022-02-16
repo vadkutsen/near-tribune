@@ -4,12 +4,12 @@ import { wallet, getPosts, addPost, updatePost, getDonations } from "@/services/
 const showModal = ref(false)
 const showEdit = ref(false)
 const posts = ref([])
+const isLoading = ref(false)
 
 export const usePosts = () => {
   const accountId = wallet.getAccountId()
   const owner = process.env.VUE_APP_CONTRACT_ID
   const err = ref(null)
-  const isLoading = ref(false)
   const form = reactive({
     title: "",
     text: "",
@@ -41,6 +41,7 @@ export const usePosts = () => {
       isLoading.value = true
       await addPost(post)
       posts.value = await getPosts()
+      posts.value.reverse()
       isLoading.value = false
       showModal.value = false
     } catch (e) {
@@ -60,7 +61,7 @@ export const usePosts = () => {
       await updatePost(post)
       posts.value = await getPosts()
       isLoading.value = false
-      showModal.value = false
+      showEdit.value = false
     } catch (e) {
       err.value = e
       isLoading.value = false

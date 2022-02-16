@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="py-16 bg-gray-50 overflow-hidden lg:py-24">
     <div class="col-sm-6 col-md-4 col-lg-3">
       <div class="panel panel-default panel-pet">
         <div class="panel-body">
@@ -9,7 +9,7 @@
         </div>
         <div class="panel-footer">
           <div v-if="accountId != post.author">
-            <DonateForm/>
+            <TipForm/>
           </div>
           <button v-if="accountId === post.author"
             class="flex items-center justify-center h-12 w-40 rounded-md bg-gray-500 text-white mx-2"
@@ -19,7 +19,7 @@
             <span class="mr-2">Edit</span>
           </button>
           <div v-if="showEdit">
-            <EditPostDialog :post="post"/>
+            <EditPostDialog :post="post" :postId="postId"/>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import DonateForm from "@/components/DonateForm.vue"
+import TipForm from "@/components/TipForm.vue"
 import EditPostDialog from "@/components/EditPostDialog.vue"
 import Loading from "vue-loading-overlay"
 import "vue-loading-overlay/dist/vue-loading.css"
@@ -41,7 +41,7 @@ import { useRoute } from "vue-router";
 
 export default {
   components: {
-    DonateForm,
+    TipForm,
     Loading,
     EditPostDialog
   },
@@ -50,9 +50,9 @@ export default {
       const err = ref(null)
       const route = useRoute()
       const isLoading = ref(false)
+      const postId = route.params.id
 
       onMounted(async () => {
-        const postId = route.params.id
         isLoading.value = true
         try {
         post.value = await getPost(postId)
@@ -65,6 +65,7 @@ export default {
     })
     return {
       post,
+      postId,
       isLoading,
       ...usePosts(props)
     }

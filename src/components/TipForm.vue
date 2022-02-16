@@ -1,12 +1,12 @@
 <template>
   <form
     v-if="accountId && accountId !== owner"
-    @submit.prevent="handleDonate"
+    @submit.prevent="handleTipAuthor"
     class="flex justify-center items-center list-none"
   >
     <p><i>Like the topic?</i></p>
     <input
-      v-model="donation"
+      v-model="tips"
       id="donation"
       class="form-control border px-1 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none"
       type="number"
@@ -22,21 +22,17 @@
       <h4 class="mr-2">Tip Author Ⓝ</h4>
     </button>
   </form>
-  <Loading v-model:active="isLoading" :is-full-page="false" />
 </template>
 
 <script>
-import { useDonate } from "@/composables/donate"
-import Loading from "vue-loading-overlay"
-import "vue-loading-overlay/dist/vue-loading.css"
+import { useTips } from "@/composables/tips"
 
 export default {
   components: {
-    Loading,
   },
   setup() {
     return {
-      ...useDonate(),
+      ...useTips(),
     }
   },
 }

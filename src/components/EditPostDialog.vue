@@ -16,7 +16,7 @@
             </h3>
           </div>
           <!--body-->
-          <form @submit.prevent="handleUpdatePost">
+          <form @submit.prevent="handleUpdatePost(form)">
             <div class="relative p-6 flex-auto">
               <div class="col-span-1 lg:col-span-6">
                 <div class="mb-4 px-6 w-full">
@@ -67,53 +67,38 @@
         </div>
       </div>
     </div>
-    <Loading v-model:active="isLoading" :is-full-page="false" />
 </template>
 
 <script>
 import {ref, reactive } from 'vue'
 import { usePosts } from "@/composables/posts"
-import Loading from "vue-loading-overlay"
 import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   components: {
-    Loading,
   },
   props: {
     post: {
-      type: Array,
+      type: Object,
       required: true,
     },
+    postId: {
+      type: String,
+      required: true,
+    }
   },
-  // created() {
-  //   const { id } = this.post[0];
-  //   const { title, text } = this.post[1];
-  //   this.id = id;
-  //   this.title = title;
-  //   this.text = text;
-  // },
-  // methods: {
-  //   handleSubmit() {
-  //     const newPost = {
-  //       post_id: this.id,
-  //       title: this.title,
-  //       text: this.text,
-  //     }
-  //     this.handleUpdatePost(newPost)
-  //   }
-  // },
   setup(props) {
     const form = reactive({
-      title: props.post[1].title,
-      text: props.post[1].text
+      id: props.postId,
+      title: props.post.title,
+      text: props.post.text
     })
-    const { showEdit, toggleEdit } = usePosts()
+    const { showEdit, toggleEdit, handleUpdatePost } = usePosts()
     return {
       form,
       showEdit,
       toggleEdit,
-      // ...usePosts(),
+      handleUpdatePost
     }
   },
 }
