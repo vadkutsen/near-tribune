@@ -84,6 +84,7 @@ impl NearTribune {
   pub fn withdraw_tips(&mut self) -> Promise {
       let account_id: String = env::predecessor_account_id();
       let withdrowal_amount = self.tips.get(&account_id).unwrap_or(0);
+      assert!(withdrowal_amount > 0, "Withdrowal amount should be greater than 0");
       env::log(format!("@{} withdraw {} yNEAR", &account_id, withdrowal_amount).as_bytes());
       self.tips.remove(&account_id);
       Promise::new(account_id).transfer(withdrowal_amount)
@@ -243,5 +244,15 @@ mod tests {
     assert_eq!(contract.get_tips("sam_near".to_string()), 1_000_000_000_000_000_000_000);
     contract.withdraw_tips();
     assert_eq!(contract.get_tips("sam_near".to_string()), 0);
+  }
+
+  #[test]
+  #[should_panic(expected="Withdrowal amount should be greater than 0")]
+  fn cannot_withraw_0() {
+    let context = get_context(vec![], false);
+    testing_env!(context);
+    let mut contract = NearTribune::default();
+    assert_eq!(contract.get_tips("sam_near".to_string()), 0);
+    contract.withdraw_tips();
   }
 }
