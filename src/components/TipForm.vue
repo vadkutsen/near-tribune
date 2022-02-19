@@ -1,13 +1,13 @@
 <template>
   <form
     v-if="accountId && accountId !== owner"
-    @submit.prevent="handleTipAuthor"
+    @submit.prevent="handleTipAuthor(form)"
     class="flex justify-center items-center list-none"
   >
-    <p><i>Like the topic?</i></p>
+    <p><i>Like the article?</i></p>
     <input
-      v-model="tips"
-      id="donation"
+      v-model="form.tips"
+      id="tips"
       class="form-control border px-1 py-2 rounded focus:border-blue-500 focus:shadow-outline outline-none"
       type="number"
       placeholder="1 NEAR"
@@ -25,15 +25,31 @@
 </template>
 
 <script>
+import { reactive } from 'vue'
 import { useTips } from "@/composables/tips"
 
 export default {
   components: {
   },
-  setup() {
+  props: {
+    author: {
+      type: String,
+      required: true,
+    }
+  },
+  setup(props) {
+    const form = reactive ({
+      author: null,
+      tips: 0
+    })
     return {
+      props,
+      form,
       ...useTips(),
     }
   },
+  updated() {
+    this.form.author = this.props.author
+  }
 }
 </script>

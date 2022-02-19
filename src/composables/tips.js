@@ -1,36 +1,38 @@
-import { ref, onMounted } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import { tipAuthor, getTips, withdrawTips, wallet } from "@/services/near"
+import { useToast } from "vue-toastification"
 
 const isLoading = ref(false)
 const totalTips = ref(0)
 const owner = process.env.VUE_APP_CONTRACT_ID
+const toast = useToast();
 
 export const useTips = () => {
   const accountId = wallet.getAccountId()
-  // const owner = process.env.VUE_APP_CONTRACT_ID
-  const tips = ref(null)
   const err = ref(null)
 
   onMounted(async () => {
     try {
-      totalTips.value = await getTips(accountId)
+      totalTips.value = await getTips()
     } catch (e) {
       err.value = e
-      alert(err.value)
+      toast.error(err.value)
     }
   })
 
-
-  const handleTipAuthor = async () => {
+  const handleTipAuthor = async (form) => {
     try {
       isLoading.value = true
-      await tipAuthor(tips.value)
+      await tipAuthor(form)
       totalTips.value = await getTips()
       isLoading.value = false
+      toast.success("Tips sent successfully", {
+        timeout: 2000
+      })
     } catch (e) {
       err.value = e
-      alert(err.value)
       isLoading.value = false
+      toast.error(err.value)
     }
   }
 
@@ -40,10 +42,13 @@ export const useTips = () => {
       await withdrawTips()
       totalTips.value = await getTips()
       isLoading.value = false
+      toast.success("Tips withdrawal succeeded", {
+        timeout: 2000
+      })
     } catch (e) {
       err.value = e
-      alert(err.value)
       isLoading.value = false
+      toast.error(err.value)
     }
   }
 
@@ -51,8 +56,8 @@ export const useTips = () => {
     accountId,
     owner,
     isLoading,
-    tips,
     totalTips,
+    toast,
     handleTipAuthor,
     handleWithdraw
 }

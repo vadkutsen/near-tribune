@@ -1,11 +1,11 @@
 <template>
-    <div id="nav" class="py-4 p-0 flex justify-center bg-cyan-500">
-    <span class="mt-4 max-w-3xl mx-auto text-l">{{new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})}}</span>
-    <router-link to="/">
-        <h2 class="mt-4 max-w-3xl mx-auto text-5xl"><strong>NEAR TRIBUNE</strong></h2>
+    <div id="nav" class="bg-gray-50 py-4 p-0 flex flex-row">
+    <span class="mt-4 text-sm">{{new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})}}</span>
+    <router-link to="/" class="w-1/2 mt-4 text-5xl">
+        <h2><strong>NEAR TRIBUNE</strong></h2>
     </router-link>
-    <div class="flex w-1/4 justify-start items-center list-none">
-      <h2 class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500">Your Tips: {{(totalTips/1000000000000000000000000).toFixed(4)}} Ⓝ</h2>
+    <div class="flex w-1/3 justify-start items-center list-none">
+      <h2 v-if="accountId" class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500">Your Tips: {{totalTips}} Ⓝ</h2>
       <button
         v-if="accountId"
         class="flex items-center justify-center h-12 w-24 rounded-md bg-gray-500 text-white mx-2"
@@ -45,8 +45,10 @@ export default {
 
   },
   setup() {
+    const { toggleModal, showModal } = usePosts()
     return {
-      ...usePosts(),
+      toggleModal,
+      showModal,
       ...useTips()
     }
   },

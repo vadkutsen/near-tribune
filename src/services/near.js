@@ -31,11 +31,6 @@ export const getPost = (postId) => {
     );
 };
 
-//function to get total donations
-export const getTips = (accountId) => {
-  return wallet.account().viewFunction(CONTRACT_ID, "get_tips", {author_id: accountId});
-};
-
 //function to add a post
 export const addPost = (post) => {
   return wallet.account().functionCall({
@@ -62,15 +57,27 @@ export const updatePost = (post) => {
 };
 
 //function to tip author
-export const tipAuthor = (attachedDeposit) => {
-  attachedDeposit = utils.format.parseNearAmount(attachedDeposit)
-  console.log(attachedDeposit)
+export const tipAuthor = (form) => {
+  const amount = utils.format.parseNearAmount(form.tips.toString());
     return wallet.account().functionCall({
         contractId: CONTRACT_ID,
         methodName: "tip_author",
-        attachedDeposit:attachedDeposit
+        attachedDeposit: amount,
+        args: {
+          author_id: form.author
+        }
     })
 }
+
+//function to get tips amount by account
+export const getTips = async () => {
+  const tips = await wallet.account()
+    .viewFunction(CONTRACT_ID, "get_tips", {
+      author_id: wallet.getAccountId()
+    }
+  );
+  return (tips/1000000000000000000000000).toFixed(2);
+};
 
 //function to withdraw tips
 export const withdrawTips = () => {

@@ -25,7 +25,8 @@
     "vue-next-select": "^2.6.0",
     "vue-router": "^4.0.0-0",
     "vue-select": "^3.11.2",
-    "vue-spinner": "^1.0.4"
+    "vue-spinner": "^1.0.4",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

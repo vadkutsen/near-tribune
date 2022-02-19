@@ -1,10 +1,12 @@
 import { ref, onMounted, reactive } from "vue"
-import { wallet, getPosts, addPost, updatePost, getDonations } from "@/services/near"
+import { wallet, getPosts, addPost, updatePost } from "@/services/near"
+import { useToast } from "vue-toastification"
 
 const showModal = ref(false)
 const showEdit = ref(false)
 const posts = ref([])
 const isLoading = ref(false)
+const toast = useToast();
 
 export const usePosts = () => {
   const accountId = wallet.getAccountId()
@@ -24,7 +26,7 @@ export const usePosts = () => {
     } catch (e) {
       err.value = e
       isLoading.value = false
-      alert(err.value)
+      toast.error(err.value)
     }
   })
 
@@ -44,10 +46,13 @@ export const usePosts = () => {
       posts.value.reverse()
       isLoading.value = false
       showModal.value = false
+      toast.success("Post added successfully", {
+        timeout: 2000
+      })
     } catch (e) {
       err.value = e
       isLoading.value = false
-      alert(err.value)
+      toast.error(err.value)
     }
   }
 
@@ -62,25 +67,15 @@ export const usePosts = () => {
       posts.value = await getPosts()
       isLoading.value = false
       showEdit.value = false
+      toast.success("Post updated successfully", {
+        timeout: 2000
+      })
     } catch (e) {
       err.value = e
       isLoading.value = false
-      alert(err.value)
+      toast.error(err.value)
     }
   }
-
-  // const handleAdopt = async (props) => {
-  //   try {
-  //     isLoading.value = true
-  //     await adopt(props)
-  //     pets.value = await getPets()
-  //     isLoading.value = false
-  //   } catch (e) {
-  //     err.value = e
-  //     isLoading.value = false
-  //     alert(err.value)
-  //   }
-  // }
 
   return {
     accountId,
@@ -90,6 +85,7 @@ export const usePosts = () => {
     form,
     showModal,
     showEdit,
+    toast,
     toggleModal,
     toggleEdit,
     handleAddPost,
