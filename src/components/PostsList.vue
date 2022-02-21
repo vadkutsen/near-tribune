@@ -1,5 +1,5 @@
 <template>
-    <div v-if="posts.length" class="relative mt-12 lg:mt-24 lg:grid lg:grid-cols-1 lg:gap-8">
+    <div v-if="posts.length" class="relative mt-12 lg:mt-12 lg:grid lg:grid-cols-1 lg:gap-8">
       <div v-for="post in posts" :key="post[0]">
         <div class="col-sm-6 col-md-4 col-lg-3">
           <router-link :to="/posts/ + post[0]">

@@ -16,7 +16,8 @@ export const useTips = () => {
       totalTips.value = await getTips()
     } catch (e) {
       err.value = e
-      toast.error(err.value)
+      console.log(err.value)
+      toast.error('Something went wrong. PLease check your console logs')
     }
   })
 
@@ -24,15 +25,15 @@ export const useTips = () => {
     try {
       isLoading.value = true
       await tipAuthor(form)
-      totalTips.value = await getTips()
       isLoading.value = false
       toast.success("Tips sent successfully", {
-        timeout: 2000
+        timeout: 20000
       })
     } catch (e) {
       err.value = e
       isLoading.value = false
-      toast.error(err.value)
+      console.log(err.value)
+      toast.error('Something went wrong. PLease check your console logs')
     }
   }
 
@@ -48,7 +49,8 @@ export const useTips = () => {
     } catch (e) {
       err.value = e
       isLoading.value = false
-      toast.error(err.value)
+      console.log(err.value)
+      toast.error('Something went wrong. PLease check your console logs')
     }
   }
 
