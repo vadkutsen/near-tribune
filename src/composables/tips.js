@@ -17,7 +17,7 @@ export const useTips = () => {
     } catch (e) {
       err.value = e
       console.log(err.value)
-      toast.error('Something went wrong. PLease check your console logs')
+      // toast.error('Something went wrong. PLease check your console logs')
     }
   })
 
@@ -33,7 +33,7 @@ export const useTips = () => {
       err.value = e
       isLoading.value = false
       console.log(err.value)
-      toast.error('Something went wrong. PLease check your console logs')
+      // toast.error('Something went wrong. PLease check your console logs')
     }
   }
 
@@ -50,7 +50,7 @@ export const useTips = () => {
       err.value = e
       isLoading.value = false
       console.log(err.value)
-      toast.error('Something went wrong. PLease check your console logs')
+      // toast.error('Something went wrong. PLease check your console logs')
     }
   }
 

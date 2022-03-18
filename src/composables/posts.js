@@ -52,7 +52,8 @@ export const usePosts = () => {
     } catch (e) {
       err.value = e
       isLoading.value = false
-      toast.error(err.value)
+      console.log(err.value)
+      // toast.error(err.value)
     }
   }
 
@@ -73,7 +74,7 @@ export const usePosts = () => {
     } catch (e) {
       err.value = e
       isLoading.value = false
-      toast.error(err.value)
+      // toast.error(err.value)
     }
   }
 
