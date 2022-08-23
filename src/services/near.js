@@ -2,15 +2,15 @@ import { keyStores, Near, WalletConnection, utils } from "near-api-js";
 import BN from "bn.js";
 
 export const CONTRACT_ID = process.env.VUE_APP_CONTRACT_ID;
-const gas = new BN(process.env.VUE_APP_gas);
+const gas = new BN(process.env.VUE_APP_GAS);
 
 
 // new NEAR is used here to  awoid  async/await
 export const near = new Near({
-  networkId: process.env.VUE_APP_networkId,
+  networkId: process.env.VUE_APP_NETWORKID,
   keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-  nodeUrl: process.env.VUE_APP_nodeUrl,
-  walletUrl: process.env.VUE_APP_walletUrl,
+  nodeUrl: process.env.VUE_APP_NODEURL,
+  walletUrl: process.env.VUE_APP_WALLETURL,
 });
 
 export const wallet = new WalletConnection(near, "near_tribune");
