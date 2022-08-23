@@ -1,13 +1,14 @@
 {
   "name": "near-tribune",
   "version": "0.1.0",
-  "private": true,
   "homepage": "https://vadkutsen.github.io/near-tribune",
+  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "pages": "gh-pages -d dist/"
+    "predeploy": "vue-cli-service build",
+    "deploy": "gh-pages -d dist/"
   },
   "dependencies": {
     "@headlessui/vue": "^1.2.0",
