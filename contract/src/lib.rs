@@ -37,7 +37,7 @@ impl Default for NearTribune {
 #[near_bindgen]
 /// The contract implementation
 impl NearTribune {
-  /// Function for adding pets
+  /// Function for adding post
   pub fn add_post(&mut self, title: String, text: String) -> bool {
     assert!(title.len() > 0, "Title is reqired.");
     assert!(text.len() > 0, "Text is required.");

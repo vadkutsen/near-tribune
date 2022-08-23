@@ -31,9 +31,7 @@
                   />
                 </div>
                 <div class="mb-4 px-2 w-full">
-                  <label class="block mb-1 text-sm" for="text"
-                    >Text</label
-                  >
+                  <label class="block mb-1 text-sm" for="text">Text</label>
                   <textarea
                     id="text"
                     v-model="form.text"
@@ -41,6 +39,17 @@
                     type="text"
                     placeholder="Text..."
                     required
+                  />
+                </div>
+                <div class="mb-4 px-2 w-full">
+                  <label class="block mb-1 text-sm" for="image">Image</label>
+                  <input
+                    id="image"
+                    type="file"
+                    ref="file"
+                    @change="onFileChanged($event)"
+                    accept="image/*"
+                    capture
                   />
                 </div>
               </div>
@@ -71,12 +80,37 @@
 
 <script>
 import { usePosts } from "@/composables/posts"
+import { defineComponent, ref } from "vue"
 
 export default {
   components: {
   },
   setup() {
+    const file = ref(File | null);
+        //const form = ref<HTMLFormElement>();
+
+    function onFileChanged($event) {
+        const target = $event.target;
+        if (target && target.files) {
+            file.value = target.files[0];
+        }
+    }
+
+    async function saveImage() {
+        if (file.value) {
+            try {
+            // save file.value
+            } catch (error) {
+                console.error(error);
+                //form.value?.reset();
+                file.value = null;
+            }
+        }
+    }
+
     return {
+      saveImage,
+      onFileChanged,
       ...usePosts(),
     }
   },
