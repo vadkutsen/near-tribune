@@ -20,6 +20,7 @@
     "dotenv": "^14.3.2",
     "gh-pages": "^3.2.3",
     "near-api-js": "^0.41.0",
+    "nft.storage": "^7.0.0",
     "postcss": "^7.0.36",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.4",
     "vue": "^3.0.0",

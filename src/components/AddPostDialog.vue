@@ -43,6 +43,7 @@
                     required
                   />
                 </div>
+                <IpfsUploader />
               </div>
             </div>
             <!--footer-->
@@ -71,6 +72,7 @@
 
 <script>
 import { usePosts } from "@/composables/posts"
+import IpfsUploader from "@/components/IpfsUploader.vue"
 
 export default {
   components: {
