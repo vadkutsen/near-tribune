@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::UnorderedMap;
+use near_sdk::collections::{UnorderedMap, Vector};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::{env, near_bindgen, setup_alloc, AccountId, Promise};
 
@@ -11,8 +11,10 @@ setup_alloc!();
 pub struct NearTribune {
   /// The contact must have posts collection
   pub posts: UnorderedMap<u64, Post>,
-  /// and donations amount
+  /// tips collection
   pub tips: UnorderedMap<AccountId, u128>,
+  /// and comments collection
+  pub comments: UnorderedMap<u64, Vec<(AccountId, String)>>,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
@@ -28,8 +30,9 @@ pub struct Post {
 impl Default for NearTribune {
   fn default() -> Self {
     Self {
-      posts: UnorderedMap::new(b"a".to_vec()),
-      tips: UnorderedMap::new(b"d".to_vec()),
+      posts: UnorderedMap::new(b"p".to_vec()),
+      tips: UnorderedMap::new(b"t".to_vec()),
+      comments: UnorderedMap::new(b"c".to_vec()),
     }
   }
 }
@@ -37,6 +40,7 @@ impl Default for NearTribune {
 #[near_bindgen]
 /// The contract implementation
 impl NearTribune {
+
   /// Function for adding post
   pub fn add_post(&mut self, title: String, text: String) -> bool {
     assert!(title.len() > 0, "Title is reqired.");
@@ -52,6 +56,7 @@ impl NearTribune {
     self.posts.insert(&id, &new_post);
     true
   }
+
   /// Function for updating a post
   pub fn update_post(&mut self, post_id: u64, title: String, text: String) -> bool {
     let editor_id = env::predecessor_account_id();
@@ -80,7 +85,7 @@ impl NearTribune {
       true
   }
 
-  /// Function for tips
+  /// Function for tips withdrawal
   pub fn withdraw_tips(&mut self) -> Promise {
       let account_id: String = env::predecessor_account_id();
       let withdrowal_amount = self.tips.get(&account_id).unwrap_or(0);
@@ -88,6 +93,14 @@ impl NearTribune {
       env::log(format!("@{} withdraw {} yNEAR", &account_id, withdrowal_amount).as_bytes());
       self.tips.remove(&account_id);
       Promise::new(account_id).transfer(withdrowal_amount)
+  }
+
+  pub fn add_comment(&mut self, post_id: u64, text: String) -> bool {
+    assert!(self.posts.get(&post_id).is_some(), "Post not found");
+    assert!(text.len() > 0, "Comment text is required.");
+    env::log(format!("Adding a comment to the post with id {} ", &post_id).as_bytes());
+    self.comments.insert(&post_id, &vec!((env::predecessor_account_id(), text)));
+    true
   }
 
   /// Getters
@@ -106,6 +119,12 @@ impl NearTribune {
   /// Returns donations by author
   pub fn get_tips(&self, author_id: AccountId) -> u128 {
     self.tips.get(&author_id).unwrap_or(0)
+  }
+
+  /// Returns comments by the post id
+  pub fn get_comments(&self, post_id: u64) -> Vec<(AccountId, String)> {
+    assert!(self.posts.get(&post_id).is_some(), "Post with id {} not found.", &post_id);
+    self.comments.get(&post_id).unwrap()
   }
 }
 
@@ -152,7 +171,6 @@ mod tests {
     assert_eq!("title".to_string(), post.title);
     assert_eq!("text".to_string(), post.text);
     assert_eq!("sam_near".to_string(), post.author);
-
   }
 
   #[test]
@@ -254,5 +272,23 @@ mod tests {
     let mut contract = NearTribune::default();
     assert_eq!(contract.get_tips("sam_near".to_string()), 0);
     contract.withdraw_tips();
+  }
+
+  #[test]
+  fn add_then_get_comments() {
+    let context = get_context(vec![], false);
+    testing_env!(context);
+    let mut contract = NearTribune::default();
+    let add = contract.add_post(
+      "title".to_string(),
+      "text".to_string(),
+    );
+    assert!(add);
+    let add_comment = contract.add_comment(0, "new comment".to_string());
+    assert!(add_comment);
+    let comments = contract.get_comments(0);
+    assert_eq!(1, comments.len());
+    assert_eq!("sam_near".to_string(), comments[0].0);
+    assert_eq!("new comment".to_string(), comments[0].1);
   }
 }

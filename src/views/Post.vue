@@ -18,6 +18,11 @@
         <EditPostDialog :post="post" :postId="postId"/>
       </div>
     </div>
+    <div>
+            <p class="font-bold text-xl">Comments</p>
+            <p class="text-l">No comments yet</p>
+            <CommentForm :postId="postId"/>
+          </div>
   </div>
   <Loading v-model:active="isLoading" :is-full-page="true" />
 </template>
@@ -26,6 +31,7 @@
 import TipForm from "@/components/TipForm.vue"
 import EditPostDialog from "@/components/EditPostDialog.vue"
 import Loading from "vue-loading-overlay"
+import CommentForm from "@/components/CommentForm.vue"
 import "vue-loading-overlay/dist/vue-loading.css"
 import { usePosts } from "@/composables/posts"
 import { useTips } from "@/composables/tips"
@@ -38,7 +44,8 @@ export default {
   components: {
     TipForm,
     Loading,
-    EditPostDialog
+    EditPostDialog,
+    CommentForm
   },
   setup() {
     const post = ref([])
