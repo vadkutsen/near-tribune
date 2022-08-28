@@ -21,6 +21,7 @@ pub struct NearTribune {
 pub struct Post {
   title: String,
   text: String,
+  image: String,
   author: AccountId,
   created_at: u64,
 }
@@ -38,12 +39,13 @@ impl Default for NearTribune {
 /// The contract implementation
 impl NearTribune {
   /// Function for adding pets
-  pub fn add_post(&mut self, title: String, text: String) -> bool {
+  pub fn add_post(&mut self, title: String, text: String, image: String) -> bool {
     assert!(title.len() > 0, "Title is reqired.");
     assert!(text.len() > 0, "Text is required.");
     let new_post = Post {
       title: title,
       text: text,
+      image: image,
       author: env::predecessor_account_id(),
       created_at: env::block_timestamp(),
     };
@@ -53,7 +55,7 @@ impl NearTribune {
     true
   }
   /// Function for updating a post
-  pub fn update_post(&mut self, post_id: u64, title: String, text: String) -> bool {
+  pub fn update_post(&mut self, post_id: u64, title: String, text: String, image: String) -> bool {
     let editor_id = env::predecessor_account_id();
     let post = self.get_post(post_id);
     assert_eq!(editor_id, post.author, "Only author can update the post.");
@@ -61,6 +63,7 @@ impl NearTribune {
     let updated_post = Post {
         title: title,
         text: text,
+        image: image,
         ..post
     };
     self.posts.insert(&post_id, &updated_post);
@@ -144,6 +147,7 @@ mod tests {
     let add = contract.add_post(
       "title".to_string(),
       "text".to_string(),
+      "image".to_string(),
     );
     let posts = contract.get_posts();
     assert!(add);
@@ -151,6 +155,7 @@ mod tests {
     let post = contract.get_post(0);
     assert_eq!("title".to_string(), post.title);
     assert_eq!("text".to_string(), post.text);
+    assert_eq!("image".to_string(), post.image);
     assert_eq!("sam_near".to_string(), post.author);
 
   }
@@ -164,6 +169,7 @@ mod tests {
     contract.add_post(
       "".to_string(),
       "text".to_string(),
+      "image".to_string(),
     );
   }
 
@@ -176,6 +182,7 @@ mod tests {
     contract.add_post(
       "title".to_string(),
       "".to_string(),
+      "image".to_string(),
     );
   }
 
@@ -187,14 +194,16 @@ mod tests {
     contract.add_post(
       "title".to_string(),
       "text".to_string(),
+      "image".to_string(),
     );
-    let update = contract.update_post(0, "new title".to_string(), "new text".to_string());
+    let update = contract.update_post(0, "new title".to_string(), "new text".to_string(), "new image".to_string());
     assert!(update);
     let posts = contract.get_posts();
     assert_eq!(1, posts.len());
     let post = contract.get_post(0);
     assert_eq!("new title".to_string(), post.title);
     assert_eq!("new text".to_string(), post.text);
+    assert_eq!("new image".to_string(), post.image);
   }
 
   #[test]
@@ -206,11 +215,12 @@ mod tests {
     contract.add_post(
       "title".to_string(),
       "text".to_string(),
+      "image".to_string(),
     );
     let mut context = get_context(vec![], false);
     context.predecessor_account_id = "john_near".to_string();
     testing_env!(context);
-    contract.update_post(0, "new title".to_string(), "new text".to_string());
+    contract.update_post(0, "new title".to_string(), "new text".to_string(), "new image".to_string());
   }
 
   #[test]
